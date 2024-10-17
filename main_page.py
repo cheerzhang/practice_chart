@@ -52,7 +52,8 @@ def main():
         else:
             st.success('valid!')
             days_number = st.number_input("Insert a number", value=100, placeholder="Type a number...")
-            st.write(f'days: {days_number}')
+            r = st.number_input("Insert a number", value=0.005, placeholder="Type a number...")
+            st.write(f'days: {days_number}, r: {r*100} %')
         # if valid
         if st.button('Calculate'):
             with st.spinner('Calculating...'):
