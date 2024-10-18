@@ -86,7 +86,7 @@ def main():
             df_['baseline_y'] = df_['baseline_y'].fillna(df_['baseline_y'].max())
             df_['date'] = pd.to_datetime(df_['date'])
             df_.set_index('date', inplace=True)
-            st.bar_chart(df_[['baseline_x', 'baseline_y']])
+            st.line_chart(df_[['baseline_x', 'baseline_y']])
     if choice == 'Real':
         st.bar_chart(df, x='date', y='baseline')
 
