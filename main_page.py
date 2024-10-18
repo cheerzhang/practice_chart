@@ -75,13 +75,18 @@ def main():
     if choice == 'Merge':
         st.header('Expected Table')
         df_new = st.session_state.calculate
+        st.dataframe(df_new)
         st.header('Currunt Table')
         df_row = st.session_state.row
         st.dataframe(df_row)
         if st.button('Merge'):
             st.write('...')
             df_ = df_new.merge(df_row, on='date', how='left')
-            st.dataframe(df_)
+            # st.dataframe(df_)
+            df_['baseline_y'] = df_['baseline_y'].fillna(df_['baseline_y'].max())
+            df_['date'] = pd.to_datetime(df_['date'])
+            df_.set_index('date', inplace=True)
+            st.bar_chart(df_[['baseline_x', 'baseline_y']])
     if choice == 'Real':
         st.bar_chart(df, x='date', y='baseline')
 
