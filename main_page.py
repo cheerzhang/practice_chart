@@ -12,83 +12,95 @@ def load_data(csv_name):
         df = None
     return df
 
-def compound_interest(start_date, baseline_start, days_number, r=0.005):
-    Ds = []
-    As = []
-    Ps = []
-    P = baseline_start  # 初始本金
-    d = start_date  # 开始日期
-    for i in range(days_number):
-        # 计算复利
-        A = P * (1 + r)
-        # 输出结果
-        if isinstance(d, pd.Timestamp):  # 如果 d 是 pd.Timestamp 类型，转换为 datetime
-            d = d.to_pydatetime().date()  # 转换为日期对
-        Ds.append(d)
-        As.append(A)
-        Ps.append(P)
-        # 递增日期，确保跳过周末
-        d += datetime.timedelta(days=1)
-        while d.weekday() >= 5:  # 5 = Saturday, 6 = Sunday
-            d += datetime.timedelta(days=1)
-        # 更新本金为当前的 A
-        P = A
-    return Ds, As, Ps
+def summary_table(final_amount, invest_amount):
+    OneYearEarnt = (final_amount-invest_amount)
+    OneYearEarntRate = OneYearEarnt / invest_amount
+    summary_table = pd.DataFrame(
+        {
+            '1年后净值': [final_amount],
+            '1年收益': [OneYearEarnt],
+            '1年收益率': [round(OneYearEarntRate, 2)]
+        }
+    )
+    st.dataframe(summary_table)
+
+def one_time_invest_all(invest_amount_init, df_base):
+    df = df_base[['日期','涨跌幅', '涨跌幅 %']].copy()
+    df['当前净值'] = invest_amount_init  # 初始化第一天净值
+    df['当天收益'] = 0 # 初始化当天收益
+    for i in range(1, len(df)):
+        # 计算当天收益 = 前一天当前净值 * 当天涨跌幅
+        df.loc[i, '当天收益'] = df.loc[i - 1, '当前净值'] * df.loc[i, '涨跌幅']
+        # 计算当前净值 = 前一天的当前净值 * (1 + 当天涨跌幅)
+        df.loc[i, '当前净值'] = df.loc[i - 1, '当前净值'] * (1 + df.loc[i, '涨跌幅'])
+    return df
+
+def invest_withdraw(invest_amount_init, withdraw_ratio,df_base):
+    df = df_base[['日期','涨跌幅', '涨跌幅 %']].copy()
+    df['当前净值'] = invest_amount_init  # 初始化第一天净值
+    df['当天收益'] = 0 # 初始化当天收益
+    df['当天提取'] = 0 # 初始化当天提取
+    for i in range(1, len(df)):
+        # 计算当天收益 = 前一天当前净值 * 当天涨跌幅
+        df.loc[i, '当天收益'] = df.loc[i - 1, '当前净值'] * df.loc[i, '涨跌幅']
+        # 计算是否提取收益
+        if df.loc[i, '涨跌幅'] > 0:
+            df.loc[i, '当天提取'] = df.loc[i, '当天收益'] * withdraw_ratio
+        # 计算当天净值 = 前一天当前净值 + 当天收益 - 当天提取
+        df.loc[i, '当前净值'] = df.loc[i - 1, '当前净值'] + df.loc[i, '当天收益'] - df.loc[i, '当天提取']
+    return df
+
+
+
+
 
 def main():
-    if "calculate" not in st.session_state:
-        st.session_state.calculate = None
     df = load_data('./.local_db/main.csv')
     df['date'] = pd.to_datetime(df['date'], errors='coerce')
-    st.session_state.row = df
+    df_base = load_data('./.local_db/OneYear500.csv')
+    df_base['日期'] = pd.to_datetime(df_base['日期'], errors='coerce')
+    df_base = df_base.sort_values('日期').reset_index(drop=True)
+    df_base['涨跌幅 %'] = df_base['涨跌幅']
+    df_base['涨跌幅'] = df_base['涨跌幅 %'].str.replace('%', '').astype(float) / 100
+    
+    # data
+    invest_amount_init = 40000
+    st.write("初始投资额", invest_amount_init)
+
     # menu
-    menu = ["Simulation", "Real", "Merge"]
+    menu = ["策略1", "策略2", "2"]
     choice = st.sidebar.radio("Menu", menu)
-    if choice == "Simulation":
+
+    # 策略配置1
+    if choice == '策略1':
+        st.header('策略1:一次性投入')
+        if invest_amount_init > 0:
+            df_1 = one_time_invest_all(invest_amount_init, df_base)
+            summary_table(
+                final_amount = df_1.iloc[-1]['当前净值'], 
+                invest_amount = invest_amount_init)
+            st.dataframe(df_1[['日期','涨跌幅 %', '当前净值','当天收益']])
+
+    # 策略配置2
+    if choice == "策略2":
+        st.header('策略2:一次性投入 + 定期提取')
+        withdraw_ratio = st.select_slider("提取收益比率",
+            options=[0.1, 0.2, 0.3, 0.4, 0.5],)
+        if invest_amount_init > 0:
+            df_2 = invest_withdraw(invest_amount_init, 
+                                   withdraw_ratio,
+                                   df_base)
+            summary_table(
+                final_amount = df_2.iloc[-1]['当前净值'], 
+                invest_amount = invest_amount_init)
+            st.dataframe(df_2[['日期','涨跌幅 %', '当前净值','当天收益','当天提取']])
+
+
         start_date = st.date_input("When's the start day?", datetime.date.today())
         start_date_ = np.datetime64(pd.to_datetime(start_date))
-        if start_date_ not in df['date'].values:
-            st.error('not fond')
-        else:
-            st.success('valid!')
-            days_number = st.number_input("Insert a number", value=100, placeholder="Type a number...")
-            r = st.number_input("Insert a number", value=0.005, placeholder="Type a number...")
-            st.write(f'days: {days_number}, r: {r*100} %')
-        # if valid
-        if st.button('Calculate'):
-            with st.spinner('Calculating...'):
-                baseline_start = df[df['date'] == start_date_]['baseline'].values[0]
-                r = 0.005
-                Ds, As, Ps = compound_interest(start_date, baseline_start, days_number, r)
-                data_df = pd.DataFrame(
-                    {
-                        'date': Ds,
-                        'baseline': Ps,
-                        'A_expect': As
-                    }
-                )
-                data_df['precent_expect'] = r
-                data_df['date'] = pd.to_datetime(data_df['date'], errors='coerce')
-                st.session_state.calculate = data_df
-            st.success('Calculated done!')
-            st.bar_chart(data_df, x='date', y='baseline')
-    if choice == 'Merge':
+    if choice == '2':
         st.header('Expected Table')
-        df_new = st.session_state.calculate
-        st.dataframe(df_new)
-        st.header('Currunt Table')
-        df_row = st.session_state.row
-        st.dataframe(df_row)
-        if st.button('Merge'):
-            st.write('...')
-            df_ = df_new.merge(df_row, on='date', how='left')
-            # st.dataframe(df_)
-            df_['baseline_y'] = df_['baseline_y'].fillna(df_['baseline_y'].max())
-            df_['date'] = pd.to_datetime(df_['date'])
-            df_.set_index('date', inplace=True)
-            st.line_chart(df_[['baseline_x', 'baseline_y']])
-    if choice == 'Real':
-        st.bar_chart(df, x='date', y='baseline')
+    
 
 
 
