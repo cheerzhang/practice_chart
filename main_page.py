@@ -98,7 +98,9 @@ def main():
                 summary_table_ = summary_table(
                     final_amount = df_1.iloc[-1]['当前净值'], 
                     invest_amount = invest_amount_init,
-                    total_cash = df_1['当天提取'].sum())
+                    total_cash = df_1['当天提取'].sum(),
+                    withdraw_designed_days = 0,
+                    withdraw_days = 0)
             st.dataframe(df_1[['日期','涨跌幅 %', '当前净值','当天收益','当天提取','今日是否提取','提取日']])
 
     # 策略配置2
@@ -112,13 +114,17 @@ def main():
                 df_2 = s2_invest_withdraw(invest_amount_init, withdraw_ratio_2, 132, withraw_limit2, df_base)
                 final_amount = df_2.iloc[-1]['当前净值']
                 invest_amount = invest_amount_init
+                withdraw_designed_days = df_2[df_2['提取日']==True].shape[0]
+                withdraw_days = df_2[df_2['今日是否提取']==True].shape[0]
             with st.spinner('calculating ...'):
                 total_cash = df_2['当天提取'].sum()
                 st.success('Calculated.')
             summary_table_ = summary_table(
                 final_amount = final_amount, 
                 invest_amount = invest_amount,
-                total_cash = total_cash)
+                total_cash = total_cash,
+                withdraw_designed_days = withdraw_designed_days,
+                withdraw_days = withdraw_days)
             st.dataframe(df_2[['日期','涨跌幅 %', '当前净值','当天收益','当天提取', '累计收益','今日是否提取','提取日']])
 
         start_date = st.date_input("When's the start day?", datetime.date.today())
@@ -135,13 +141,17 @@ def main():
                 df_3 = s2_invest_withdraw(invest_amount_init, withdraw_ratio_3, 5, withraw_limit3, df_base)
                 final_amount = df_3.iloc[-1]['当前净值']
                 invest_amount = invest_amount_init
+                withdraw_designed_days = df_3[df_3['提取日']==True].shape[0]
+                withdraw_days = df_3[df_3['今日是否提取']==True].shape[0]
             with st.spinner('calculating ...'):
                 total_cash = df_3['当天提取'].sum()
                 st.success('Calculated.')
             summary_table_ = summary_table(
                 final_amount = final_amount, 
                 invest_amount = invest_amount,
-                total_cash = total_cash)
+                total_cash = total_cash,
+                withdraw_designed_days = withdraw_designed_days,
+                withdraw_days = withdraw_days)
             st.dataframe(df_3[['日期','涨跌幅 %', '当前净值','当天收益','当天提取', '累计收益', '今日是否提取','提取日']])
 
     # 策略配置4
@@ -155,13 +165,17 @@ def main():
                 df_4 = s2_invest_withdraw(invest_amount_init, withdraw_ratio_4, 22, withraw_limit4, df_base)
                 final_amount = df_4.iloc[-1]['当前净值']
                 invest_amount = invest_amount_init
+                withdraw_designed_days = df_4[df_4['提取日']==True].shape[0]
+                withdraw_days = df_4[df_4['今日是否提取']==True].shape[0]
             with st.spinner('calculating ...'):
                 total_cash = df_4['当天提取'].sum()
                 st.success('Calculated.')
             summary_table_ = summary_table(
                 final_amount = final_amount, 
                 invest_amount = invest_amount,
-                total_cash = total_cash)
+                total_cash = total_cash,
+                withdraw_designed_days = withdraw_designed_days,
+                withdraw_days = withdraw_days)
             st.dataframe(df_4[['日期','涨跌幅 %', '当前净值','当天收益','当天提取', '累计收益' ,'今日是否提取','提取日']])
 
 main()
