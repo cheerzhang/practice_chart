@@ -101,10 +101,12 @@ def main():
     # 策略配置2
     if choice == "策略2":
         st.header('策略2: 一次性投入 + 每半年条件提取')
+        withraw_limit2 = 3000
+        st.info(f'每半年收益提取上限 {withraw_limit2}')
         withdraw_ratio_2 = st.select_slider("提取收益比率", options=[0.1, 0.2, 0.3, 0.5, 0.9, 1.0],)
         if invest_amount_init > 0 and withdraw_ratio_2 >= 0.1:
             with st.spinner('calculating ...'):
-                df_2 = s2_invest_withdraw(invest_amount_init, withdraw_ratio_2, 132, 3000, df_base)
+                df_2 = s2_invest_withdraw(invest_amount_init, withdraw_ratio_2, 132, withraw_limit2, df_base)
                 final_amount = df_2.iloc[-1]['当前净值']
                 invest_amount = invest_amount_init
             with st.spinner('calculating ...'):
@@ -122,10 +124,12 @@ def main():
     # 策略配置3
     if choice == '策略3':
         st.header('策略3: 一次性投入 + 每周条件提取')
+        withraw_limit3 = 150
+        st.info(f'每周收益提取上限 {withraw_limit3}')
         withdraw_ratio_3 = st.select_slider("提取收益比率", options=[0.1, 0.2, 0.3, 0.5, 0.9, 1.0],)
         if invest_amount_init > 0 and withdraw_ratio_3 >= 0.1:
             with st.spinner('calculating ...'):
-                df_3 = s2_invest_withdraw(invest_amount_init, withdraw_ratio_3, 5, 150, df_base)
+                df_3 = s2_invest_withdraw(invest_amount_init, withdraw_ratio_3, 5, withraw_limit3, df_base)
                 final_amount = df_3.iloc[-1]['当前净值']
                 invest_amount = invest_amount_init
             with st.spinner('calculating ...'):
@@ -140,10 +144,12 @@ def main():
     # 策略配置4
     if choice == "策略4":
         st.header('策略4:一次性投入 + 每月条件提取')
+        withraw_limit4 = 500
+        st.info(f'每月收益提取上限 {withraw_limit4}')
         withdraw_ratio_4 = st.select_slider("提取收益比率", options=[0.1, 0.2, 0.3, 0.5, 0.9, 1.0],)
         if invest_amount_init > 0 and withdraw_ratio_4 >= 0.1:
             with st.spinner('calculating ...'):
-                df_4 = s2_invest_withdraw(invest_amount_init, withdraw_ratio_4, 22, 500, df_base)
+                df_4 = s2_invest_withdraw(invest_amount_init, withdraw_ratio_4, 22, withraw_limit4, df_base)
                 final_amount = df_4.iloc[-1]['当前净值']
                 invest_amount = invest_amount_init
             with st.spinner('calculating ...'):
