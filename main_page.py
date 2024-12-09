@@ -52,11 +52,9 @@ def s2_invest_withdraw(invest_amount_init, withdraw_ratio, days, withdraw_limit,
         # 计算当天收益 = 前一天当前净值 * 当天涨跌幅
         df.loc[i, '当天收益'] = df.loc[i - 1, '当前净值'] * df.loc[i, '涨跌幅']
         # 累计N天收益
-        if i % days != 0:
-            EarntND = EarntND + df.loc[i, '当天收益']
-            df.loc[i, '累计收益'] = EarntND
-            # 计算是否提取收益
-        else:
+        EarntND = EarntND + df.loc[i, '当天收益']
+        df.loc[i, '累计收益'] = EarntND
+        if i % days == 0:
             if EarntND * withdraw_ratio >= withdraw_limit:
                 df.loc[i, '当天提取'] = withdraw_limit
                 df.loc[i, '累计收益'] = EarntND
