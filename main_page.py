@@ -19,10 +19,10 @@ def summary_table(final_amount, invest_amount, total_cash):
     cash_onhands = round(total_cash, 2)
     summary_table_ = pd.DataFrame(
         {
-            '3年后净值': [final_amount],
-            '3年收益': [OneYearEarnt],
-            '3年收益率': [OneYearEarntRate],
-            '3年总提取': [cash_onhands]
+            '2年后净值': [final_amount],
+            '2年收益': [OneYearEarnt],
+            '2年收益率': [OneYearEarntRate],
+            '2年总提取': [cash_onhands]
         }
     )
     st.dataframe(summary_table_)
@@ -71,7 +71,7 @@ def s2_invest_withdraw(invest_amount_init, withdraw_ratio, days, df_base):
 def main():
     df = load_data('./.local_db/main.csv')
     df['date'] = pd.to_datetime(df['date'], errors='coerce')
-    df_base = load_data('./.local_db/ThreeYear500.csv')
+    df_base = load_data('./.local_db/TwoYear500.csv')
     df_base['日期'] = pd.to_datetime(df_base['日期'], errors='coerce')
     df_base = df_base.sort_values('日期').reset_index(drop=True)
     df_base['涨跌幅 %'] = df_base['涨跌幅']
