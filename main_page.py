@@ -99,7 +99,7 @@ def main():
                     final_amount = df_1.iloc[-1]['当前净值'], 
                     invest_amount = invest_amount_init,
                     total_cash = df_1['当天提取'].sum())
-            st.dataframe(df_1[['日期','涨跌幅 %', '当前净值','当天收益','当天提取']])
+            st.dataframe(df_1[['日期','涨跌幅 %', '当前净值','当天收益','当天提取','今日是否提取','提取日']])
 
     # 策略配置2
     if choice == "策略2":
@@ -119,7 +119,7 @@ def main():
                 final_amount = final_amount, 
                 invest_amount = invest_amount,
                 total_cash = total_cash)
-            st.dataframe(df_2[['日期','涨跌幅 %', '当前净值','当天收益','当天提取', '累计收益']])
+            st.dataframe(df_2[['日期','涨跌幅 %', '当前净值','当天收益','当天提取', '累计收益','今日是否提取','提取日']])
 
         start_date = st.date_input("When's the start day?", datetime.date.today())
         start_date_ = np.datetime64(pd.to_datetime(start_date))
@@ -142,7 +142,7 @@ def main():
                 final_amount = final_amount, 
                 invest_amount = invest_amount,
                 total_cash = total_cash)
-            st.dataframe(df_3[['日期','涨跌幅 %', '当前净值','当天收益','当天提取', '累计收益']])
+            st.dataframe(df_3[['日期','涨跌幅 %', '当前净值','当天收益','当天提取', '累计收益', '今日是否提取','提取日']])
 
     # 策略配置4
     if choice == "策略4":
@@ -162,6 +162,6 @@ def main():
                 final_amount = final_amount, 
                 invest_amount = invest_amount,
                 total_cash = total_cash)
-            st.dataframe(df_4[['日期','涨跌幅 %', '当前净值','当天收益','当天提取', '累计收益']])
+            st.dataframe(df_4[['日期','涨跌幅 %', '当前净值','当天收益','当天提取', '累计收益' ,'今日是否提取','提取日']])
 
 main()
