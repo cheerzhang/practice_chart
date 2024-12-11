@@ -17,14 +17,14 @@ def summary_table(final_amount, invest_amount, total_cash, withdraw_designed_day
     OneYearEarntRate = OneYearEarnt / invest_amount
     OneYearEarntRate = round(OneYearEarntRate, 2)
     cash_onhands = round(total_cash, 2)
-    withdraw_days_ratio = 0 if withdraw_days==0 else round(withdraw_designed_days/withdraw_days, 2)
+    withdraw_days_ratio = 0 if withdraw_days==0 else round(withdraw_days/withdraw_designed_days, 2)
     summary_table_ = pd.DataFrame(
         {
             '2年后净值': [final_amount],
             '2年收益': [OneYearEarnt],
             '2年收益率': [OneYearEarntRate],
             '2年总提取': [cash_onhands],
-            '收益提取率: [提取次数/提取日]': [f'{withdraw_designed_days} / {withdraw_days}, {withdraw_days_ratio * 100} %']
+            '收益提取率: [提取次数/提取日]': [f'{withdraw_days} / {withdraw_designed_days}, {withdraw_days_ratio * 100} %']
         }
     )
     st.dataframe(summary_table_)
