@@ -76,11 +76,24 @@ def s2_invest_withdraw(invest_amount_init, withdraw_ratio, days, withdraw_limit,
 def main():
     df = load_data('./.local_db/main.csv')
     df['date'] = pd.to_datetime(df['date'], errors='coerce')
-    df_base = load_data('./.local_db/TwoYear500.csv')
-    df_base['日期'] = pd.to_datetime(df_base['日期'], errors='coerce')
-    df_base = df_base.sort_values('日期').reset_index(drop=True)
-    df_base['涨跌幅 %'] = df_base['涨跌幅']
-    df_base['涨跌幅'] = df_base['涨跌幅 %'].str.replace('%', '').astype(float) / 100
+    df_ = load_data('./.local_db/TwoYear500.csv')
+    df_['DATE'] = pd.to_datetime(df_base['DATE'], errors='coerce')
+    df_ = df_.sort_values('DATE').reset_index(drop=True)
+    df_['涨跌幅 %'] = df_['涨跌幅']
+    df_['涨跌幅'] = df_['涨跌幅 %'].str.replace('%', '').astype(float) / 100
+
+    # select the time range
+    min_date = df_base['created_at'].min()
+    max_date = df_base['created_at'].max()
+    selected_date = st.date_input(
+        "Select a date range", 
+            (min_date, max_date),
+            min_date,
+            max_date,
+            format='YYYY-MM-DD',
+    )
+    df_base = df_[df_['DATE']>=min_date]
+    features = ['DATE','涨跌幅 %', '当前净值','当天收益','当天提取','今日是否提取','提取日']
     
     # data
     invest_amount_init = 40000
@@ -103,7 +116,7 @@ def main():
                     total_cash = df_1['当天提取'].sum(),
                     withdraw_designed_days = 0,
                     withdraw_days = 0)
-            st.dataframe(df_1[['日期','涨跌幅 %', '当前净值','当天收益','当天提取','今日是否提取','提取日']])
+            st.dataframe(df_1[features])
 
     # 策略配置2
     if choice == "策略2":
@@ -127,7 +140,7 @@ def main():
                 total_cash = total_cash,
                 withdraw_designed_days = withdraw_designed_days,
                 withdraw_days = withdraw_days)
-            st.dataframe(df_2[['日期','涨跌幅 %', '当前净值','当天收益','当天提取', '累计收益','今日是否提取','提取日']])
+            st.dataframe(df_2[features])
 
         start_date = st.date_input("When's the start day?", datetime.date.today())
         start_date_ = np.datetime64(pd.to_datetime(start_date))
@@ -154,7 +167,7 @@ def main():
                 total_cash = total_cash,
                 withdraw_designed_days = withdraw_designed_days,
                 withdraw_days = withdraw_days)
-            st.dataframe(df_3[['日期','涨跌幅 %', '当前净值','当天收益','当天提取', '累计收益', '今日是否提取','提取日']])
+            st.dataframe(df_3[features])
 
     # 策略配置4
     if choice == "策略4":
@@ -178,6 +191,6 @@ def main():
                 total_cash = total_cash,
                 withdraw_designed_days = withdraw_designed_days,
                 withdraw_days = withdraw_days)
-            st.dataframe(df_4[['日期','涨跌幅 %', '当前净值','当天收益','当天提取', '累计收益' ,'今日是否提取','提取日']])
+            st.dataframe(df_4[features])
 
 main()
