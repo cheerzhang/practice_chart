@@ -83,8 +83,8 @@ def main():
     df_['涨跌幅'] = df_['涨跌幅 %'].str.replace('%', '').astype(float) / 100
 
     # select the time range
-    min_date = df_['created_at'].min()
-    max_date = df_['created_at'].max()
+    min_date = df_['DATE'].min()
+    max_date = df_['DATE'].max()
     selected_date = st.date_input(
         "Select a date range", 
             (min_date, max_date),
