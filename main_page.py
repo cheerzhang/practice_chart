@@ -92,7 +92,8 @@ def main():
             max_date,
             format='YYYY-MM-DD',
     )
-    df_base = df_[df_['DATE']>=min_date]
+    start_date = selected_date[0]
+    df_base = df_[df_['DATE']>=start_date]
     features = ['DATE','涨跌幅 %', '当前净值','当天收益','当天提取','今日是否提取','提取日']
     
     # data
