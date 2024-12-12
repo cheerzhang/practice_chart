@@ -83,7 +83,7 @@ def main():
     df_base['涨跌幅'] = df_base['涨跌幅 %'].str.replace('%', '').astype(float) / 100
     
     # data
-    invest_amount_init = 50000
+    invest_amount_init = 40000
     st.write("初始投资额", invest_amount_init)
 
     # menu
