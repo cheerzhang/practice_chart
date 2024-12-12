@@ -31,7 +31,7 @@ def summary_table(final_amount, invest_amount, total_cash, withdraw_designed_day
     return summary_table_
 
 def one_time_invest_all(invest_amount_init, df_base):
-    df = df_base[['DATE','涨跌幅', '涨跌幅 %']].copy()
+    df = df_base[['日期','涨跌幅', '涨跌幅 %']].copy()
     df['当前净值'] = invest_amount_init  # 初始化第一天净值
     df['当天收益'] = 0 # 初始化当天收益
     df['当天提取'] = 0 # 初始化当天提取
@@ -46,7 +46,7 @@ def one_time_invest_all(invest_amount_init, df_base):
     return df
 
 def s2_invest_withdraw(invest_amount_init, withdraw_ratio, days, withdraw_limit, df_base):
-    df = df_base[['DATE','涨跌幅', '涨跌幅 %']].copy()
+    df = df_base[['日期','涨跌幅', '涨跌幅 %']].copy()
     df['当前净值'] = invest_amount_init  # 初始化第一天净值
     df['当天收益'] = 0 # 初始化当天收益
     df['当天提取'] = 0 # 初始化当天提取
@@ -96,7 +96,7 @@ def main():
     start_date = pd.to_datetime(start_date)
     df_base = df_[df_['DATE']>=start_date]
     st.dataframe(df_base)
-    features = ['DATE','涨跌幅 %', '当前净值','当天收益','当天提取','今日是否提取','提取日']
+    features = ['日期','涨跌幅 %', '当前净值','当天收益','当天提取','今日是否提取','提取日']
     
     # data
     invest_amount_init = 40000
