@@ -77,7 +77,7 @@ def main():
     df = load_data('./.local_db/main.csv')
     df['date'] = pd.to_datetime(df['date'], errors='coerce')
     df_ = load_data('./.local_db/TwoYear500.csv')
-    df_['DATE'] = pd.to_datetime(df_base['DATE'], errors='coerce')
+    df_['DATE'] = pd.to_datetime(df_['DATE'], errors='coerce')
     df_ = df_.sort_values('DATE').reset_index(drop=True)
     df_['涨跌幅 %'] = df_['涨跌幅']
     df_['涨跌幅'] = df_['涨跌幅 %'].str.replace('%', '').astype(float) / 100
