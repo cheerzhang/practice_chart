@@ -93,6 +93,7 @@ def main():
             format='YYYY-MM-DD',
     )
     start_date = selected_date[0]
+    start_date = pd.to_datetime(start_date)
     df_base = df_[df_['DATE']>=start_date]
     features = ['DATE','涨跌幅 %', '当前净值','当天收益','当天提取','今日是否提取','提取日']
     
