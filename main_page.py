@@ -95,7 +95,7 @@ def main():
     start_date = selected_date[0]
     start_date = pd.to_datetime(start_date)
     df_base = df_[df_['DATE']>=start_date]
-    st.dataframe(df_base)
+    df_base = df_base.sort_values('DATE').reset_index(drop=True)
     features = ['日期','涨跌幅 %', '当前净值','当天收益','当天提取','今日是否提取','提取日']
     
     # data
