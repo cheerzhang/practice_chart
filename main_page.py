@@ -76,7 +76,7 @@ def s2_invest_withdraw(invest_amount_init, withdraw_ratio, days, withdraw_limit,
 def main():
     df = load_data('./.local_db/main.csv')
     df['date'] = pd.to_datetime(df['date'], errors='coerce')
-    df_ = load_data('./.local_db/TwoYear500.csv')
+    df_ = load_data('./.local_db/OneYear500.csv')
     df_['DATE'] = pd.to_datetime(df_['日期'], errors='coerce')
     df_ = df_.sort_values('DATE').reset_index(drop=True)
     df_['涨跌幅 %'] = df_['涨跌幅']
@@ -99,7 +99,7 @@ def main():
     features = ['日期','涨跌幅 %', '当前净值','当天收益','当天提取','今日是否提取','提取日']
     
     # data
-    invest_amount_init = 40000
+    invest_amount_init = 47000
     st.write("初始投资额", invest_amount_init)
 
     # menu
